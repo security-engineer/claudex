@@ -1,5 +1,7 @@
 # claudex
 
+*🌐 **English** · [한국어](README.ko.md)*
+
 Use **OpenAI Codex (GPT-5.x)** as a *balanced sub-agent* under **Claude Code**.
 
 Claude is the supervisor and final decision-maker; Codex does the token-heavy grunt work
