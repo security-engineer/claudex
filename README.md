@@ -74,7 +74,7 @@ claude mcp list          # codex should be ✔ Connected
 - **Claude (Opus 4.8)** = supervisor — final judgment, applying edits, running tests, reconciling.
 - **Codex (GPT-5.x, xhigh)** = sub-agent — token-heavy exploration, first drafts, independent review, edge-case hunting. Runs on your OpenAI/ChatGPT quota, **not** Anthropic tokens.
 
-Just work normally — the SessionStart policy nudges Claude to delegate appropriately. Or drive it directly with the commands below.
+The SessionStart policy nudges Claude to delegate, but delegation is **not automatic** — you control the split with **`/claudex:mode`** (set `codex`/`max` to push most work to Codex), and Codex earns its keep on **token-heavy code work** (exploration, first drafts, reviews) rather than small edits or harness/config tasks. Drive it directly with the commands below.
 
 ### `/claudex:delegate <task>`
 

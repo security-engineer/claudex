@@ -69,7 +69,7 @@ claude mcp list          # codex 가 ✔ Connected 여야 함
 - **Claude (Opus 4.8)** = 감독자 — 최종 판단, 편집 적용, 테스트 실행, 의견 조율.
 - **Codex (GPT-5.x, xhigh)** = 서브 에이전트 — 토큰을 많이 쓰는 탐색, 초안, 독립 리뷰, 엣지케이스 헌팅. Anthropic 토큰이 **아니라** 여러분의 OpenAI/ChatGPT 쿼터로 동작.
 
-평소처럼 작업하면 됩니다 — SessionStart 정책이 Claude가 적절히 위임하도록 유도합니다. 아래 명령으로 직접 구동할 수도 있습니다.
+SessionStart 정책이 위임을 유도하지만, 위임은 **자동이 아닙니다** — 분할은 **`/claudex:mode`로 직접 정하세요**(`codex`/`max`로 두면 대부분 Codex에 넘김). 그리고 Codex는 **토큰 무거운 코드 작업**(탐색·초안·리뷰)에서 값을 하지, 작은 편집이나 하니스/설정 작업엔 굳이 안 씁니다. 아래 명령으로 직접 구동할 수도 있습니다.
 
 ### `/claudex:delegate <작업>`
 
