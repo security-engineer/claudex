@@ -62,6 +62,18 @@ Map it to a call:
 3. **Inspect** the output critically — verify claims, check edge cases. Do **not** apply blindly.
 4. **Decide & apply.** Claude owns the final edit, tests, and explanation.
 
+## Adaptive delegation (token pressure)
+
+A `UserPromptSubmit` hook estimates context usage each turn and may inject an `[adaptive-delegation]` directive. When you see one, escalate accordingly:
+
+| Pressure | Behavior |
+|---|---|
+| 60–80% (elevated) | Prefer Codex for ALL exploration + first drafts; review summaries, not full re-reads |
+| ≥80% (aggressive) | Hand drafting + multi-file reading to Codex; Claude reviews diffs/summaries only |
+| ≥90% (max) | Codex does nearly everything; Claude only orchestrates + judges; suggest `/compact` |
+
+Tune via env: `CODEX_CONTEXT_BUDGET` (default 200000), `CODEX_DELEGATE_THRESHOLD` (default 0.80), `CODEX_DELEGATE_FORCE=off|elevated|aggressive|max` (manual override). The estimate is approximate (from transcript size).
+
 ## Common mistakes
 
 - Downgrading Codex's model to save money — that, not delegation, is what actually drops quality. Keep GPT-5.x at high/xhigh (`~/.codex/config.toml`).

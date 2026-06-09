@@ -131,6 +131,25 @@ codex exec -C <code-dir> -s read-only --skip-git-repo-check "<focused task>"
 - **교차 리뷰 라운드** — 호출 시 `rounds=N` (기본 2, 상한 5).
 - **샌드박스** — 기본 읽기 전용. Codex가 패치를 만들어야 할 때만 `workspace-write`.
 
+## 적응형 위임 (토큰 압력)
+
+Claude 컨텍스트가 차오르면, `UserPromptSubmit` 훅이 사용량을 추정해 `[adaptive-delegation]` 지시를 주입하여 **Codex 위임 범위를 넓힙니다** — 세션을 Anthropic 토큰으로 더 길게 끌고 가도록.
+
+| 컨텍스트 압력 | 동작 |
+|---|---|
+| < 60% | 평소 균형 자세 |
+| 60–80% (elevated) | 탐색·초안 전부 Codex 우선; 요약만 검토(전체 재독 X) |
+| ≥ 80% (aggressive) | 드래프팅·다중파일 읽기를 Codex에; Claude는 diff/요약만 검토 |
+| ≥ 90% (max) | Codex가 거의 전부; Claude는 조율·판정만; `/compact` 제안 |
+
+추정치는 **근사값**입니다(트랜스크립트 크기 기반이라 하니스 컴팩션을 반영하지 못함). 조정:
+
+| 환경변수 | 기본값 | 의미 |
+|---|---|---|
+| `CODEX_CONTEXT_BUDGET` | `200000` | 측정 기준이 되는 전체 컨텍스트 토큰 |
+| `CODEX_DELEGATE_THRESHOLD` | `0.80` | *aggressive* 단계를 트리거하는 비율 |
+| `CODEX_DELEGATE_FORCE` | _(미설정)_ | `off` · `elevated` · `aggressive` · `max` — 단계 강제(수동 오버라이드) |
+
 ## 안전 수칙
 
 - 비밀값, `.env`, 개인 키, 자격증명, 토큰, SSH/클라우드 인증을 Codex에 절대 보내지 마세요.

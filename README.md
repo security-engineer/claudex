@@ -136,6 +136,25 @@ codex exec -C <code-dir> -s read-only --skip-git-repo-check "<focused task>"
 - **Cross-review rounds** — per call via `rounds=N` (default 2, ceiling 5).
 - **Sandbox** — read-only by default; `workspace-write` only when Codex must produce a patch.
 
+## Adaptive delegation (token pressure)
+
+As Claude's context fills, a `UserPromptSubmit` hook estimates usage and injects an `[adaptive-delegation]` directive that **widens delegation to Codex**, so the session stretches further on Anthropic tokens.
+
+| Context pressure | Behavior |
+|---|---|
+| < 60% | Normal balanced posture |
+| 60–80% (elevated) | Prefer Codex for all exploration + first drafts; review summaries, not full re-reads |
+| ≥ 80% (aggressive) | Hand drafting + multi-file reading to Codex; Claude reviews diffs/summaries only |
+| ≥ 90% (max) | Codex does nearly everything; Claude only orchestrates + judges; suggests `/compact` |
+
+The estimate is **approximate** (derived from transcript size; harness compaction makes it imperfect). Tune it:
+
+| Env var | Default | Meaning |
+|---|---|---|
+| `CODEX_CONTEXT_BUDGET` | `200000` | total context tokens to measure against |
+| `CODEX_DELEGATE_THRESHOLD` | `0.80` | fraction that triggers the *aggressive* tier |
+| `CODEX_DELEGATE_FORCE` | _(unset)_ | `off` · `elevated` · `aggressive` · `max` — force a tier (manual override) |
+
 ## Safety
 
 - Never send secrets, `.env`, private keys, credentials, tokens, SSH/cloud auth to Codex.
