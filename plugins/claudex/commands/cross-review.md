@@ -3,7 +3,7 @@ description: Run a bounded Claude<->Codex cross-review (feedback loop) on a targ
 argument-hint: <file | diff | topic> [rounds=N] [style=ab|independent|debate]
 ---
 
-Run a **cross-review** between Claude (supervisor) and the Codex sub-agent on the target below, then YOU (Claude) deliver the final verdict. Follow the `codex-subagent` skill for delegation + safety.
+Run a **cross-review** between Claude (supervisor) and the Codex sub-agent on the target below, then YOU (Claude) deliver the final verdict. Follow the `codex` skill for delegation + safety.
 
 **Arguments:** $ARGUMENTS
 

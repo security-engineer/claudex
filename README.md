@@ -15,7 +15,7 @@ This repo is a **Claude Code plugin marketplace** with one plugin: **`claudex`**
 ## What the plugin sets up
 
 - **`codex` MCP server** — auto-registered via the bundled `.mcp.json` (runs `codex mcp-server`).
-- **`codex-subagent` skill** — the balanced-delegation workflow + safety rules (loaded on demand, costs no context until used).
+- **`codex` skill** — the balanced-delegation workflow + safety rules (loaded on demand, costs no context until used).
 - **`/claudex:delegate <task>`** — delegate one focused task to Codex, then review.
 - **`/claudex:cross-review <target>`** — bounded Claude↔Codex feedback loop with a user-chosen round count.
 - **`/claudex:mode`** — choose how work is split between Claude and Codex (`solo | balanced | codex | max`).
@@ -129,9 +129,9 @@ Choose how work is split between Claude and Codex (stored in `~/.claude/claudex-
 
 Print a compact status block — the active **work-split mode**, and **Codex**: login, version, model, MCP connection. For Claude's own usage use the built-in `/usage` (plan quota) and `/context` (context window); this plugin doesn't reinvent those.
 
-### The `codex-subagent` skill
+### The `codex` skill
 
-Loaded **on demand** (no context cost until used). Claude invokes it automatically when a task is heavy on exploration, drafting, or edge-case hunting, or wants an independent second opinion — or when you mention Codex / delegating to save tokens. It encodes the balanced posture, a delegation prompt template, and the safety rules. Trigger it explicitly with: “use the codex-subagent workflow.”
+Loaded **on demand** (no context cost until used). Claude invokes it automatically when a task is heavy on exploration, drafting, or edge-case hunting, or wants an independent second opinion — or when you mention Codex / delegating to save tokens. It encodes the balanced posture, a delegation prompt template, and the safety rules. Trigger it explicitly with: “use the codex workflow.”
 
 ### MCP tools (advanced / direct control)
 

@@ -3,7 +3,7 @@ description: Delegate a focused task to the Codex (GPT-5.x) sub-agent, then revi
 argument-hint: <task to delegate to Codex>
 ---
 
-Delegate the task below to the **Codex** sub-agent, then supervise the result. Follow the `codex-subagent` skill.
+Delegate the task below to the **Codex** sub-agent, then supervise the result. Follow the `codex` skill.
 
 **Task:** $ARGUMENTS
 

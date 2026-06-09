@@ -1,5 +1,5 @@
 ---
-name: codex-subagent
+name: codex
 description: Use when a task involves heavy codebase exploration, drafting code or refactors, hunting edge cases, or getting an independent second-opinion review — and you want to conserve Claude/Anthropic tokens by delegating to the OpenAI Codex sub-agent. Also use when the user mentions Codex, delegating to save tokens, or cross-checking work with a second model.
 ---
 

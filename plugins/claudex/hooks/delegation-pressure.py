@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""UserPromptSubmit hook for codex-subagent: inject the chosen work-split mode each turn.
+"""UserPromptSubmit hook for the claudex plugin: inject the chosen work-split mode each turn.
 
 The mode lives in ~/.claude/claudex-mode (solo | balanced | codex | max; default balanced),
 set via /claudex-mode. 'balanced' injects nothing (the SessionStart policy + skill govern).

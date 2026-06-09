@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# SessionStart hook for the codex-subagent plugin.
+# SessionStart hook for the claudex plugin.
 # Injects a short standing policy so Claude defaults to the balanced
 # Codex-delegation posture in every session. Kept brief on purpose —
-# the full workflow lives in the `codex-subagent` skill (loaded on demand).
+# the full workflow lives in the `codex` skill (loaded on demand).
 set -euo pipefail
 
 read -r -d '' POLICY <<'EOF' || true
@@ -11,7 +11,7 @@ Default posture — save Anthropic tokens without losing quality:
 - Delegate to Codex: codebase exploration, first-draft code/refactors, independent second-opinion review, edge-case hunting, large-file reading.
 - Keep on Claude: final judgment, applying edits, running tests, and anything needing deep conversation continuity.
 - ALWAYS inspect Codex output before applying. NEVER send secrets/.env/keys/tokens/credentials. NEVER ask Codex to scan large dataset folders — scope it to the code directory with `-C`.
-For the full workflow invoke the `codex-subagent` skill. Quick one-shot delegation: /claudex:delegate <task>.
+For the full workflow invoke the `codex` skill. Quick one-shot delegation: /claudex:delegate <task>.
 EOF
 
 # Gentle warning if the codex CLI is not installed (plugin can't work without it).
