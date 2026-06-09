@@ -72,7 +72,7 @@ A `UserPromptSubmit` hook estimates context usage each turn and may inject an `[
 | ≥80% (aggressive) | Hand drafting + multi-file reading to Codex; Claude reviews diffs/summaries only |
 | ≥90% (max) | Codex does nearly everything; Claude only orchestrates + judges; suggest `/compact` |
 
-Tune via env: `CODEX_CONTEXT_BUDGET` (default 200000), `CODEX_DELEGATE_THRESHOLD` (default 0.80), `CODEX_DELEGATE_FORCE=off|elevated|aggressive|max` (manual override). The estimate is approximate (from transcript size).
+Usage is read from the transcript's actual API token counts; the window is auto-detected (200k/1M). Tune via env: `CODEX_CONTEXT_BUDGET` (override window), `CODEX_DELEGATE_THRESHOLD` (default 0.80), `CODEX_DELEGATE_FORCE=off|elevated|aggressive|max` (manual override).
 
 ## Common mistakes
 

@@ -16,8 +16,9 @@ This repo is a **Claude Code plugin marketplace** with one plugin: **`codex-suba
 
 - **`codex` MCP server** — auto-registered via the bundled `.mcp.json` (runs `codex mcp-server`).
 - **`codex-subagent` skill** — the balanced-delegation workflow + safety rules (loaded on demand, costs no context until used).
-- **`/codex <task>`** — delegate one focused task to Codex, then review.
-- **`/cross-review <target>`** — bounded Claude↔Codex feedback loop with a user-chosen round count.
+- **`/claudex-delegate <task>`** — delegate one focused task to Codex, then review.
+- **`/claudex-cross-review <target>`** — bounded Claude↔Codex feedback loop with a user-chosen round count.
+- **`/claudex-status`** — show actual Claude context usage + remaining tokens, plus Codex status (login, version, model, MCP link).
 - **SessionStart hook** — injects a short standing policy each session so Claude defaults to the balanced posture (always-on).
 
 ## Prerequisites
@@ -60,7 +61,7 @@ Verify:
 ```bash
 claude plugin list
 claude mcp list          # codex should be ✔ Connected
-# in a session:  /mcp   then   /codex hello   then   /cross-review <target>
+# in a session:  /mcp   then   /claudex-delegate hello   then   /claudex-cross-review <target>
 ```
 
 ---
@@ -74,20 +75,20 @@ claude mcp list          # codex should be ✔ Connected
 
 Just work normally — the SessionStart policy nudges Claude to delegate appropriately. Or drive it directly with the commands below.
 
-### `/codex <task>`
+### `/claudex-delegate <task>`
 
 Delegate a single focused task to Codex, then review the result before applying.
 
 **Flow:** scope files → delegate (MCP or `codex exec`) → review critically → you (Claude) apply + test.
 
 **Examples**
-- `/codex review the diff in src/auth/ and list edge cases`
-- `/codex draft a refactor of utils/date.py to remove duplication`
-- `/codex find the root cause of the failing test in tests/test_api.py`
+- `/claudex-delegate review the diff in src/auth/ and list edge cases`
+- `/claudex-delegate draft a refactor of utils/date.py to remove duplication`
+- `/claudex-delegate find the root cause of the failing test in tests/test_api.py`
 
 Codex runs **read-only** by default; it writes only when a patch is explicitly required. Never include secrets or huge dataset dirs in scope.
 
-### `/cross-review <target> [rounds=N] [style=ab|independent|debate]`
+### `/claudex-cross-review <target> [rounds=N] [style=ab|independent|debate]`
 
 Run a **bounded** Claude↔Codex feedback loop, then Claude delivers a verdict.
 
@@ -105,12 +106,16 @@ Run a **bounded** Claude↔Codex feedback loop, then Claude delivers a verdict.
 6. If still not converged at the cap → Claude (the supervisor) decides **and reports the unresolved disagreement to you**, so a human breaks the tie. **No infinite loops.**
 
 **Examples**
-- `/cross-review src/auth.py` — 2 rounds, A→B.
-- `/cross-review the staged diff rounds=4` — up to 4 rounds.
-- `/cross-review "queue vs cron for this job?" style=independent` — independent-then-compare.
-- `/cross-review payments/refund.py rounds=3 style=debate` — 3-round adversarial debate.
+- `/claudex-cross-review src/auth.py` — 2 rounds, A→B.
+- `/claudex-cross-review the staged diff rounds=4` — up to 4 rounds.
+- `/claudex-cross-review "queue vs cron for this job?" style=independent` — independent-then-compare.
+- `/claudex-cross-review payments/refund.py rounds=3 style=debate` — 3-round adversarial debate.
 
 **Cost note:** cross-review trades extra tokens/latency for quality — use it on important or contentious code, not everything. Codex side = OpenAI tokens; Claude's orchestration/judging = Anthropic tokens.
+
+### `/claudex-status`
+
+Print a compact status block — **Claude context**: actual usage, the context window (auto-detected 200k / 1M), and **remaining tokens** (with the active adaptive tier); **Codex**: login, version, model, MCP connection. Usage is read from the transcript's real API token counts. For plan/billing usage use the built-in `/cost`.
 
 ### The `codex-subagent` skill
 
@@ -121,7 +126,7 @@ Loaded **on demand** (no context cost until used). Claude invokes it automatical
 The plugin auto-registers the **`codex`** MCP server. After installing, **restart Claude Code** so the tools load in-session.
 
 - **`codex`** — start a Codex session. Key params: `prompt` (required), `cwd` (scope to the code folder), `sandbox` (`read-only` default · `workspace-write` for patches · `danger-full-access`), `model` (default from `~/.codex/config.toml`), `approval-policy` (`never` for non-interactive). Returns a `threadId`.
-- **`codex-reply`** — continue a thread: `threadId` + `prompt`. Powers multi-round `/cross-review`.
+- **`codex-reply`** — continue a thread: `threadId` + `prompt`. Powers multi-round `/claudex-cross-review`.
 
 **CLI fallback (deterministic, works even before a restart):**
 ```bash
@@ -147,11 +152,11 @@ As Claude's context fills, a `UserPromptSubmit` hook estimates usage and injects
 | ≥ 80% (aggressive) | Hand drafting + multi-file reading to Codex; Claude reviews diffs/summaries only |
 | ≥ 90% (max) | Codex does nearly everything; Claude only orchestrates + judges; suggests `/compact` |
 
-The estimate is **approximate** (derived from transcript size; harness compaction makes it imperfect). Tune it:
+Usage is read from the transcript's **actual API token counts** (input + cache read/creation), and the context window is **auto-detected** (200k, or 1M once usage passes 200k). Tune it:
 
 | Env var | Default | Meaning |
 |---|---|---|
-| `CODEX_CONTEXT_BUDGET` | `200000` | total context tokens to measure against |
+| `CODEX_CONTEXT_BUDGET` | _(auto)_ | context window override (auto-detects 200k / 1M if unset) |
 | `CODEX_DELEGATE_THRESHOLD` | `0.80` | fraction that triggers the *aggressive* tier |
 | `CODEX_DELEGATE_FORCE` | _(unset)_ | `off` · `elevated` · `aggressive` · `max` — force a tier (manual override) |
 
@@ -166,7 +171,7 @@ The estimate is **approximate** (derived from transcript size; harness compactio
 
 | Symptom | Fix |
 |---|---|
-| `/codex`, `/cross-review`, or codex MCP tools missing | Restart Claude Code — MCP + commands load at session start |
+| `/claudex-delegate`, `/claudex-cross-review`, or codex MCP tools missing | Restart Claude Code — MCP + commands load at session start |
 | codex MCP not connected | `codex login status`; install + log in to codex in the **same** environment as Claude Code |
 | Codex returns an auth error | `codex login` (or `codex login --device-auth`) |
 | `codex exec` errors “Not inside a trusted directory” | add `--skip-git-repo-check` and `-C <code-dir>` |
