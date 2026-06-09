@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/delegation-pressure.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/delegation-pressure.py\" 2>/dev/null || true",
             "async": false
           }
         ]

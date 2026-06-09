@@ -8,7 +8,7 @@ Set or show the **work-split mode** between Claude and Codex. The mode is stored
 **Arguments:** $ARGUMENTS
 
 - **No arg** → read the current mode and show the table below:
-  `cat ~/.claude/claudex-mode 2>/dev/null || echo balanced`
+  `m=$(cat ~/.claude/claudex-mode 2>/dev/null); case "$m" in solo|balanced|codex|max) echo "$m";; *) echo balanced;; esac`
 - **`solo` | `balanced` | `codex` | `max`** → save it, then confirm:
   `printf '%s' "<mode>" > ~/.claude/claudex-mode`
 - Anything else → reject and show the valid options.

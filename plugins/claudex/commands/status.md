@@ -7,7 +7,7 @@ Report **claudex status** as one compact block. Run the checks below, then prese
 ### A) Work-split mode
 
 ```bash
-cat ~/.claude/claudex-mode 2>/dev/null || echo balanced
+m=$(cat ~/.claude/claudex-mode 2>/dev/null); case "$m" in solo|balanced|codex|max) echo "$m";; *) echo balanced;; esac
 ```
 The active mode is one of `solo | balanced | codex | max`. Change it with `/claudex:mode <mode>`.
 

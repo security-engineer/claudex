@@ -2,7 +2,7 @@
 """UserPromptSubmit hook for the claudex plugin: inject the chosen work-split mode each turn.
 
 The mode lives in ~/.claude/claudex-mode (solo | balanced | codex | max; default balanced),
-set via /claudex-mode. 'balanced' injects nothing (the SessionStart policy + skill govern).
+set via /claudex:mode. 'balanced' injects nothing (the SessionStart policy + skill govern).
 Re-read every turn, so a mode change takes effect on the next turn without a restart.
 
 Never fails the turn: any error → no injection, exit 0.
