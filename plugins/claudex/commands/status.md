@@ -9,7 +9,7 @@ Report **claudex status** as one compact block. Run the checks below, then prese
 ```bash
 cat ~/.claude/claudex-mode 2>/dev/null || echo balanced
 ```
-The active mode is one of `solo | balanced | codex | max`. Change it with `/claudex-mode <mode>`.
+The active mode is one of `solo | balanced | codex | max`. Change it with `/claudex:mode <mode>`.
 
 ### B) Codex sub-agent
 

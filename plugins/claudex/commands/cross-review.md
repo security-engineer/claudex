@@ -25,9 +25,9 @@ Other styles: `independent` = both solve separately and you diff the two answers
 **Report:** final verdict, what changed, agreed points, and any unresolved disagreement (both sides stated fairly).
 
 Examples:
-- `/claudex-cross-review src/auth.py` → 2 rounds, A→B.
-- `/claudex-cross-review the staged diff rounds=4` → up to 4 rounds.
-- `/claudex-cross-review "queue vs cron for this job?" style=independent` → independent-then-compare.
-- `/claudex-cross-review payments/refund.py rounds=3 style=debate` → 3-round adversarial debate.
+- `/claudex:cross-review src/auth.py` → 2 rounds, A→B.
+- `/claudex:cross-review the staged diff rounds=4` → up to 4 rounds.
+- `/claudex:cross-review "queue vs cron for this job?" style=independent` → independent-then-compare.
+- `/claudex:cross-review payments/refund.py rounds=3 style=debate` → 3-round adversarial debate.
 
 If **target** is empty, ask what to cross-review.

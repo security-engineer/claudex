@@ -28,7 +28,7 @@ The `codex` MCP server runs **OpenAI Codex (GPT-5.x at xhigh reasoning)** as a s
 
 | Need | Action |
 |------|--------|
-| In-session delegation | Call the `codex` MCP tool (`mcp__plugin_codex-subagent_codex__codex`) with a focused prompt |
+| In-session delegation | Call the `codex` MCP tool (`mcp__plugin_claudex_codex__codex`) with a focused prompt |
 | Deterministic CLI fallback | `codex exec -C <code-dir> -s read-only --skip-git-repo-check "<task>"` |
 | Codex must write a patch | Use a writable sandbox, scoped to the code dir, **no secrets in scope** |
 | Discover the exact MCP tool | `/mcp`, or ToolSearch for "codex" |
@@ -64,7 +64,7 @@ Map it to a call:
 
 ## Work-split mode
 
-The user picks the Claude↔Codex split with `/claudex-mode` (`solo | balanced | codex | max`, default balanced). A `UserPromptSubmit` hook injects the active mode each turn — honor it: `solo` = do it yourself; `codex`/`max` = delegate drafting/reading/generation to Codex, you orchestrate and judge.
+The user picks the Claude↔Codex split with `/claudex:mode` (`solo | balanced | codex | max`, default balanced). A `UserPromptSubmit` hook injects the active mode each turn — honor it: `solo` = do it yourself; `codex`/`max` = delegate drafting/reading/generation to Codex, you orchestrate and judge.
 
 ## Common mistakes
 
