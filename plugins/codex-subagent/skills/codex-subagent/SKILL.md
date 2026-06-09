@@ -28,7 +28,7 @@ The `codex` MCP server runs **OpenAI Codex (GPT-5.x at xhigh reasoning)** as a s
 
 | Need | Action |
 |------|--------|
-| In-session delegation | Call the `codex` MCP tool (e.g. `mcp__codex__codex`) with a focused prompt |
+| In-session delegation | Call the `codex` MCP tool (`mcp__plugin_codex-subagent_codex__codex`) with a focused prompt |
 | Deterministic CLI fallback | `codex exec -C <code-dir> -s read-only --skip-git-repo-check "<task>"` |
 | Codex must write a patch | Use a writable sandbox, scoped to the code dir, **no secrets in scope** |
 | Discover the exact MCP tool | `/mcp`, or ToolSearch for "codex" |
@@ -62,17 +62,9 @@ Map it to a call:
 3. **Inspect** the output critically — verify claims, check edge cases. Do **not** apply blindly.
 4. **Decide & apply.** Claude owns the final edit, tests, and explanation.
 
-## Adaptive delegation (token pressure)
+## Work-split mode
 
-A `UserPromptSubmit` hook estimates context usage each turn and may inject an `[adaptive-delegation]` directive. When you see one, escalate accordingly:
-
-| Pressure | Behavior |
-|---|---|
-| 60–80% (elevated) | Prefer Codex for ALL exploration + first drafts; review summaries, not full re-reads |
-| ≥80% (aggressive) | Hand drafting + multi-file reading to Codex; Claude reviews diffs/summaries only |
-| ≥90% (max) | Codex does nearly everything; Claude only orchestrates + judges; suggest `/compact` |
-
-Usage is read from the transcript's actual API token counts; the window is auto-detected (200k/1M). Tune via env: `CODEX_CONTEXT_BUDGET` (override window), `CODEX_DELEGATE_THRESHOLD` (default 0.80), `CODEX_DELEGATE_FORCE=off|elevated|aggressive|max` (manual override).
+The user picks the Claude↔Codex split with `/claudex-mode` (`solo | balanced | codex | max`, default balanced). A `UserPromptSubmit` hook injects the active mode each turn — honor it: `solo` = do it yourself; `codex`/`max` = delegate drafting/reading/generation to Codex, you orchestrate and judge.
 
 ## Common mistakes
 

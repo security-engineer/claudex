@@ -18,7 +18,8 @@ This repo is a **Claude Code plugin marketplace** with one plugin: **`codex-suba
 - **`codex-subagent` skill** — the balanced-delegation workflow + safety rules (loaded on demand, costs no context until used).
 - **`/claudex-delegate <task>`** — delegate one focused task to Codex, then review.
 - **`/claudex-cross-review <target>`** — bounded Claude↔Codex feedback loop with a user-chosen round count.
-- **`/claudex-status`** — show actual Claude context usage + remaining tokens, plus Codex status (login, version, model, MCP link).
+- **`/claudex-mode`** — choose how work is split between Claude and Codex (`solo | balanced | codex | max`).
+- **`/claudex-status`** — show the current work-split mode and Codex status (login, version, model, MCP link).
 - **SessionStart hook** — injects a short standing policy each session so Claude defaults to the balanced posture (always-on).
 
 ## Prerequisites
@@ -113,9 +114,20 @@ Run a **bounded** Claude↔Codex feedback loop, then Claude delivers a verdict.
 
 **Cost note:** cross-review trades extra tokens/latency for quality — use it on important or contentious code, not everything. Codex side = OpenAI tokens; Claude's orchestration/judging = Anthropic tokens.
 
+### `/claudex-mode [solo|balanced|codex|max]`
+
+Choose how work is split between Claude and Codex (stored in `~/.claude/claudex-mode`, read each turn — takes effect next turn). No arg shows the current mode.
+
+| Mode | Work split |
+|---|---|
+| `solo` | Claude does everything; Codex only if you explicitly ask. |
+| `balanced` (default) | Exploration, first drafts, and second-opinion reviews → Codex; Claude scopes, reviews, applies, tests, judges. |
+| `codex` | Drafting, multi-file reading, and most generation → Codex; Claude orchestrates and judges. |
+| `max` | Almost everything → Codex; Claude only orchestrates and judges. |
+
 ### `/claudex-status`
 
-Print a compact status block — **Claude context**: actual usage, the context window (auto-detected 200k / 1M), and **remaining tokens** (with the active adaptive tier); **Codex**: login, version, model, MCP connection. Usage is read from the transcript's real API token counts. For plan/billing usage use the built-in `/cost`.
+Print a compact status block — the active **work-split mode**, and **Codex**: login, version, model, MCP connection. For Claude's own usage use the built-in `/usage` (plan quota) and `/context` (context window); this plugin doesn't reinvent those.
 
 ### The `codex-subagent` skill
 
@@ -140,25 +152,6 @@ codex exec -C <code-dir> -s read-only --skip-git-repo-check "<focused task>"
 - **Codex model / reasoning effort** — `~/.codex/config.toml` (`model`, `model_reasoning_effort`). The MCP server and `codex exec` both inherit these. Don't downgrade the model to save money — that's the one change that actually lowers quality.
 - **Cross-review rounds** — per call via `rounds=N` (default 2, ceiling 5).
 - **Sandbox** — read-only by default; `workspace-write` only when Codex must produce a patch.
-
-## Adaptive delegation (token pressure)
-
-As Claude's context fills, a `UserPromptSubmit` hook estimates usage and injects an `[adaptive-delegation]` directive that **widens delegation to Codex**, so the session stretches further on Anthropic tokens.
-
-| Context pressure | Behavior |
-|---|---|
-| < 60% | Normal balanced posture |
-| 60–80% (elevated) | Prefer Codex for all exploration + first drafts; review summaries, not full re-reads |
-| ≥ 80% (aggressive) | Hand drafting + multi-file reading to Codex; Claude reviews diffs/summaries only |
-| ≥ 90% (max) | Codex does nearly everything; Claude only orchestrates + judges; suggests `/compact` |
-
-Usage is read from the transcript's **actual API token counts** (input + cache read/creation), and the context window is **auto-detected** (200k, or 1M once usage passes 200k). Tune it:
-
-| Env var | Default | Meaning |
-|---|---|---|
-| `CODEX_CONTEXT_BUDGET` | _(auto)_ | context window override (auto-detects 200k / 1M if unset) |
-| `CODEX_DELEGATE_THRESHOLD` | `0.80` | fraction that triggers the *aggressive* tier |
-| `CODEX_DELEGATE_FORCE` | _(unset)_ | `off` · `elevated` · `aggressive` · `max` — force a tier (manual override) |
 
 ## Safety
 
