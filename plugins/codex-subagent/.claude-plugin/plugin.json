@@ -1,0 +1,22 @@
+{
+  "name": "codex-subagent",
+  "version": "1.0.0",
+  "description": "Delegate exploration, drafting, second-opinion review, and edge-case hunting to OpenAI Codex (GPT-5.x) as a sub-agent under Claude Code's supervision. Bundles the codex MCP server, a balanced-delegation skill, a /codex command, and a SessionStart policy that keeps the workflow always-on.",
+  "author": {
+    "name": "security-engineer",
+    "email": "124942940+security-engineer@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/security-engineer/claudex",
+  "repository": "https://github.com/security-engineer/claudex",
+  "keywords": [
+    "codex",
+    "mcp",
+    "sub-agent",
+    "orchestration",
+    "token-saving",
+    "gpt-5",
+    "code-review",
+    "supervisor"
+  ]
+}

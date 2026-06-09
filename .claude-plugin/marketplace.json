@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claudex",
+  "description": "Use OpenAI Codex (GPT-5.x) as a balanced sub-agent under Claude Code: save Anthropic tokens on exploration and drafting while Claude supervises and reviews for quality.",
+  "owner": {
+    "name": "security-engineer",
+    "email": "124942940+security-engineer@users.noreply.github.com"
+  },
+  "plugins": [
+    {
+      "name": "codex-subagent",
+      "description": "Registers the Codex MCP server and teaches Claude Code to delegate exploration, drafting, second-opinion review, and edge-case hunting to Codex (GPT-5.x) in a balanced posture. Claude supervises and reviews before applying. Bundles a skill, a /codex command, and a SessionStart policy.",
+      "source": "./plugins/codex-subagent",
+      "category": "workflow"
+    }
+  ]
+}

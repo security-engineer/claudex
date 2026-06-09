@@ -1,0 +1,12 @@
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Node (if you add tooling later)
+node_modules/
+
+# Local scratch
+*.log
+.tmp/
